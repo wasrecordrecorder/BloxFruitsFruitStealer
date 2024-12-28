@@ -1,0 +1,163 @@
+print("Babaika Zagrushena")
+local Event = game:GetService("ReplicatedStorage").Remotes["CommF_"]
+
+local function setTeamToPirates()
+    Event:InvokeServer("SetTeam", "Pirates")
+end
+
+setTeamToPirates()
+
+local TweenService = game:GetService("TweenService")
+local TeleportService = game:GetService("TeleportService")
+
+local fruitsInWorkspace = {
+    "Rocket Fruit",
+    "Spin Fruit",
+    "Chop Fruit",
+    "Spring Fruit",
+    "Bomb Fruit",
+    "Smoke Fruit",
+    "Spike Fruit",
+    "Flame Fruit",
+    "Falcon Fruit",
+    "Ice Fruit",
+    "Sand Fruit",
+    "Dark Fruit",
+    "Diamond Fruit",
+    "Light Fruit",
+    "Rubber Fruit",
+    "Barrier Fruit",
+    "Ghost Fruit",
+    "Magma Fruit",
+    "Quake Fruit",
+    "Buddha Fruit",
+    "Love Fruit",
+    "Spider Fruit",
+    "Sound Fruit",
+    "Phoenix Fruit",
+    "Portal Fruit",
+    "Rumble Fruit",
+    "Pain Fruit",
+    "Blizzard Fruit",
+    "Gravity Fruit",
+    "Mammoth Fruit",
+    "T-Rex Fruit",
+    "Dough Fruit",
+    "Shadow Fruit",
+    "Venom Fruit",
+    "Control Fruit",
+    "Spirit Fruit",
+    "Gas Fruit",
+    "Leopard Fruit",
+    "Yeti Fruit",
+    "Kitsune Fruit",
+    "Dragon Fruit"
+}
+
+local fruitsForEvent = {
+    "Rocket-Rocket",
+    "Spin-Spin",
+    "Chop-Chop",
+    "Spring-Spring",
+    "Bomb-Bomb",
+    "Smoke-Smoke",
+    "Spike-Spike",
+    "Flame-Flame",
+    "Falcon-Falcon",
+    "Ice-Ice",
+    "Sand-Sand",
+    "Dark-Dark",
+    "Diamond-Diamond",
+    "Light-Light",
+    "Rubber-Rubber",
+    "Barrier-Barrier",
+    "Ghost-Ghost",
+    "Magma-Magma",
+    "Quake-Quake",
+    "Buddha-Buddha",
+    "Love-Love",
+    "Spider-Spider",
+    "Sound-Sound",
+    "Phoenix-Phoenix",
+    "Portal-Portal",
+    "Rumble-Rumble",
+    "Pain-Pain",
+    "Blizzard-Blizzard",
+    "Gravity-Gravity",
+    "Mammoth-Mammoth",
+    "T-Rex-T-Rex",
+    "Dough-Dough",
+    "Shadow-Shadow",
+    "Venom-Venom",
+    "Control-Control",
+    "Spirit-Spirit",
+    "Gas-Gas",
+    "Leopard-Leopard",
+    "Yeti-Yeti",
+    "Kitsune-Kitsune",
+    "Dragon-Dragon"
+}
+
+local function checkFruitsExist()
+    for _, fruitName in pairs(fruitsInWorkspace) do
+        local fruit = game.Workspace:FindFirstChild(fruitName)
+        if fruit then
+            return true
+        end
+    end
+    return false
+end
+
+local function storePlayerFruits()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local backpack = player.Backpack
+
+    for i, fruitName in pairs(fruitsInWorkspace) do
+        local fruitInBackpack = backpack:FindFirstChild(fruitName)
+        local fruitInCharacter = character:FindFirstChild(fruitName)
+
+        if fruitInBackpack then
+            Event:InvokeServer("StoreFruit", fruitsForEvent[i], fruitInBackpack)
+        elseif fruitInCharacter then
+            Event:InvokeServer("StoreFruit", fruitsForEvent[i], fruitInCharacter)
+        end
+    end
+end
+
+local function moveToFruit(fruit)
+    local handle = fruit:FindFirstChild("Handle")
+    if handle then
+        local distance = (handle.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+        local time = distance / 200
+        local info = TweenInfo.new(time, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(game.Players.LocalPlayer.Character.HumanoidRootPart, info, {CFrame = handle.CFrame})
+        tween:Play()
+        tween.Completed:Wait()
+    end
+end
+
+local function teleportToNewServer()
+    local servers = TeleportService:GetGameInstances(game.PlaceId)
+    if #servers > 0 then
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, servers[math.random(1, #servers)])
+    else
+        warn("Нет доступных серверов для телепортации.")
+    end
+end
+
+while true do
+    wait(1)
+    for i, fruitName in pairs(fruitsInWorkspace) do
+        local fruit = game.Workspace:FindFirstChild(fruitName)
+        if fruit then
+            moveToFruit(fruit)
+            storePlayerFruits()
+            storePlayerFruits()
+        end
+    end
+    if not checkFruitsExist() then
+        teleportToNewServer()
+        break
+    end
+end
