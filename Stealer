@@ -10,18 +10,6 @@ setTeamToPirates()
 local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 
-local function printFoundFruits()
-    print("Найденные фрукты на сервере:")
-    for _, fruitName in pairs(fruitsInWorkspace) do
-        local fruit = game.Workspace:FindFirstChild(fruitName)
-        if fruit then
-            print("- " .. fruitName)
-        end
-    end
-end
-
-printFoundFruits()
-
 local fruitsInWorkspace = {
     "Rocket Fruit",
     "Spin Fruit",
@@ -111,7 +99,18 @@ local fruitsForEvent = {
     "Dragon-Dragon"
 }
 
--- Проверка, есть ли фрукты в Workspace
+local function printFoundFruits()
+    print("Найденные фрукты на сервере:")
+    for _, fruitName in pairs(fruitsInWorkspace) do
+        local fruit = game.Workspace:FindFirstChild(fruitName)
+        if fruit then
+            print("- " .. fruitName)
+        end
+    end
+end
+
+printFoundFruits()
+
 local function checkFruitsExist()
     for _, fruitName in pairs(fruitsInWorkspace) do
         local fruit = game.Workspace:FindFirstChild(fruitName)
@@ -163,7 +162,6 @@ local function teleportToNewServer()
     end
 end
 
--- Основной цикл
 while true do
     wait(1)
     for i, fruitName in pairs(fruitsInWorkspace) do
