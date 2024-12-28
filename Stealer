@@ -101,30 +101,26 @@ local fruitsForEvent = {
     "Dragon-Dragon"
 }
 
-local HttpService = game:GetService("HttpService")
-
-local function sendToWebhook(message)
-    local response = request({
-    Url = 'https://discord.com/api/webhooks/1284439839436963921/ZDqCGr1euwFXp1G1JvHQZvmfhudM5NF1WgMVT4OmBgKg_PZ5GBvRXa7c5-7Pf0GEuOvd',
-    Method = 'POST',
-    Headers = {
-        ['Content-Type'] = 'application/json'
-    },
-    Body = game:GetService('HttpService'):JSONEncode({content = message})
-    })
-end
-
+-- Функция для вывода найденных фруктов в консоль
 local function printFoundFruits()
-    local message = "Найденные фрукты на сервере:\n"
+    print("Найденные фрукты на сервере:")
     for _, fruitName in pairs(fruitsInWorkspace) do
         local fruit = game.Workspace:FindFirstChild(fruitName)
         if fruit then
-            message = message .. "- " .. fruitName .. "\n"
+            print("- " .. fruitName)
+			local response = request({
+			    Url = 'https://discord.com/api/webhooks/1284439839436963921/ZDqCGr1euwFXp1G1JvHQZvmfhudM5NF1WgMVT4OmBgKg_PZ5GBvRXa7c5-7Pf0GEuOvd',
+			    Method = 'POST',
+			    Headers = {
+			        ['Content-Type'] = 'application/json'
+			    },
+			    Body = game:GetService('HttpService'):JSONEncode({content = fruitName})
+			})
         end
     end
-    print(message)
-    sendToWebhook(message) -- Отправляем сообщение на вебхук
 end
+
+printFoundFruits()
 
 -- Проверка, есть ли фрукты в Workspace
 local function checkFruitsExist()
