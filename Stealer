@@ -104,15 +104,14 @@ local fruitsForEvent = {
 local HttpService = game:GetService("HttpService")
 
 local function sendToWebhook(message)
-    local success, response = pcall(function()
-        return HttpService:PostAsync(
-            'https://discord.com/api/webhooks/1284439839436963921/ZDqCGr1euwFXp1G1JvHQZvmfhudM5NF1WgMVT4OmBgKg_PZ5GBvRXa7c5-7Pf0GEuOvd',
-            HttpService:JSONEncode({content = message})
-        )
-    end)
-    if not success then
-        warn("Ошибка при отправке на вебхук: " .. response)
-    end
+    local response = request({
+    Url = 'https://discord.com/api/webhooks/1284439839436963921/ZDqCGr1euwFXp1G1JvHQZvmfhudM5NF1WgMVT4OmBgKg_PZ5GBvRXa7c5-7Pf0GEuOvd',
+    Method = 'POST',
+    Headers = {
+        ['Content-Type'] = 'application/json'
+    },
+    Body = game:GetService('HttpService'):JSONEncode({content = message})
+    })
 end
 
 local function printFoundFruits()
@@ -123,6 +122,7 @@ local function printFoundFruits()
             message = message .. "- " .. fruitName .. "\n"
         end
     end
+    print(message)
     sendToWebhook(message) -- Отправляем сообщение на вебхук
 end
 
