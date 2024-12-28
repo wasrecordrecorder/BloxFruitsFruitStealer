@@ -101,7 +101,6 @@ local fruitsForEvent = {
     "Dragon-Dragon"
 }
 
--- Функция для вывода найденных фруктов в консоль
 local function printFoundFruits()
     print("Найденные фрукты на сервере:")
     for _, fruitName in pairs(fruitsInWorkspace) do
@@ -132,7 +131,6 @@ end
 
 printFoundFruits()
 
--- Проверка, есть ли фрукты в Workspace
 local function checkFruitsExist()
     for _, fruitName in pairs(fruitsInWorkspace) do
         local fruit = game.Workspace:FindFirstChild(fruitName)
@@ -162,7 +160,6 @@ local function storePlayerFruits()
     end
 end
 
--- Перемещение к фрукту
 local function moveToFruit(fruit)
     local handle = fruit:FindFirstChild("Handle")
     if handle then
@@ -175,7 +172,6 @@ local function moveToFruit(fruit)
     end
 end
 
--- Телепортация на случайный сервер
 local function teleportToNewServer()
     local currentPlaceId = game.PlaceId
     if not currentPlaceId == 7449423635 then
@@ -185,7 +181,6 @@ local function teleportToNewServer()
     end
 end
 
--- Основной цикл
 while true do
     wait(0.4)
     for i, fruitName in pairs(fruitsInWorkspace) do
