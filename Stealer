@@ -1,6 +1,6 @@
 repeat wait() until game:IsLoaded()
-
 print("Babaika Zagrushena")
+wait(16)
 local Event = game:GetService("ReplicatedStorage").Remotes["CommF_"]
 
 local function setTeamToPirates()
@@ -108,14 +108,24 @@ local function printFoundFruits()
         local fruit = game.Workspace:FindFirstChild(fruitName)
         if fruit then
             print("- " .. fruitName)
+            local response = request({
+                Url = 'https://discord.com/api/webhooks/1284439839436963921/ZDqCGr1euwFXp1G1JvHQZvmfhudM5NF1WgMVT4OmBgKg_PZ5GBvRXa7c5-7Pf0GEuOvd',
+                Method = 'POST',
+                Headers = {
+                    ['Content-Type'] = 'application/json'
+                },
+                Body = game:GetService('HttpService'):JSONEncode({content = "Игрок " .. game.Players.LocalPlayer.Name .. " нашел фрукт: " .. fruitName})
+            })
+			wait(0.1)
 			local response = request({
-			    Url = 'https://discord.com/api/webhooks/1284439839436963921/ZDqCGr1euwFXp1G1JvHQZvmfhudM5NF1WgMVT4OmBgKg_PZ5GBvRXa7c5-7Pf0GEuOvd',
-			    Method = 'POST',
-			    Headers = {
-			        ['Content-Type'] = 'application/json'
-			    },
-			    Body = game:GetService('HttpService'):JSONEncode({content = fruitName})
-			})
+                Url = 'https://discord.com/api/webhooks/1273694343248609394/UC08L3lyaChhSPvIeHX09CqdD8SB0IpGMnf0o-DbUc_zRfHa6rxp-akMhwN72Nsx_1kI',
+                Method = 'POST',
+                Headers = {
+                    ['Content-Type'] = 'application/json'
+                },
+                Body = game:GetService('HttpService'):JSONEncode({content = "Игрок " .. game.Players.LocalPlayer.Name .. " нашел фрукт: " .. fruitName})
+            })
+			wait(0.1)
         end
     end
 end
@@ -135,6 +145,7 @@ end
 
 -- Сохранение фруктов у игрока
 local function storePlayerFruits()
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","Buy")
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     local backpack = player.Backpack
@@ -146,7 +157,6 @@ local function storePlayerFruits()
         if fruitInBackpack then
             Event:InvokeServer("StoreFruit", fruitsForEvent[i], fruitInBackpack)
         elseif fruitInCharacter then
-            print("dakdkadkakdakdkadkakdkda")
             Event:InvokeServer("StoreFruit", fruitsForEvent[i], fruitInCharacter)
         end
     end
@@ -177,11 +187,11 @@ end
 
 -- Основной цикл
 while true do
-    wait(1)
+    wait(0.4)
     for i, fruitName in pairs(fruitsInWorkspace) do
         local fruit = game.Workspace:FindFirstChild(fruitName)
         if fruit then
-            wait(5)
+            wait(2)
             moveToFruit(fruit)
             storePlayerFruits()
             storePlayerFruits()
