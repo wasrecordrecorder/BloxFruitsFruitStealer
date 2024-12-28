@@ -1,3 +1,5 @@
+repeat wait() until game:IsLoaded()
+
 print("Babaika Zagrushena")
 local Event = game:GetService("ReplicatedStorage").Remotes["CommF_"]
 
@@ -99,18 +101,32 @@ local fruitsForEvent = {
     "Dragon-Dragon"
 }
 
-local function printFoundFruits()
-    print("Найденные фрукты на сервере:")
-    for _, fruitName in pairs(fruitsInWorkspace) do
-        local fruit = game.Workspace:FindFirstChild(fruitName)
-        if fruit then
-            print("- " .. fruitName)
-        end
+local HttpService = game:GetService("HttpService")
+
+local function sendToWebhook(message)
+    local success, response = pcall(function()
+        return HttpService:PostAsync(
+            'https://discord.com/api/webhooks/1284439839436963921/ZDqCGr1euwFXp1G1JvHQZvmfhudM5NF1WgMVT4OmBgKg_PZ5GBvRXa7c5-7Pf0GEuOvd',
+            HttpService:JSONEncode({content = message})
+        )
+    end)
+    if not success then
+        warn("Ошибка при отправке на вебхук: " .. response)
     end
 end
 
-printFoundFruits()
+local function printFoundFruits()
+    local message = "Найденные фрукты на сервере:\n"
+    for _, fruitName in pairs(fruitsInWorkspace) do
+        local fruit = game.Workspace:FindFirstChild(fruitName)
+        if fruit then
+            message = message .. "- " .. fruitName .. "\n"
+        end
+    end
+    sendToWebhook(message) -- Отправляем сообщение на вебхук
+end
 
+-- Проверка, есть ли фрукты в Workspace
 local function checkFruitsExist()
     for _, fruitName in pairs(fruitsInWorkspace) do
         local fruit = game.Workspace:FindFirstChild(fruitName)
@@ -134,6 +150,7 @@ local function storePlayerFruits()
         if fruitInBackpack then
             Event:InvokeServer("StoreFruit", fruitsForEvent[i], fruitInBackpack)
         elseif fruitInCharacter then
+            print("dakdkadkakdakdkadkakdkda")
             Event:InvokeServer("StoreFruit", fruitsForEvent[i], fruitInCharacter)
         end
     end
@@ -152,16 +169,17 @@ local function moveToFruit(fruit)
     end
 end
 
--- Телепортация на новый сервер
+-- Телепортация на случайный сервер
 local function teleportToNewServer()
-    local servers = TeleportService:GetGameInstances(game.PlaceId)
-    if #servers > 0 then
-        TeleportService:TeleportToPlaceInstance(game.PlaceId, servers[math.random(1, #servers)])
-    else
-        warn("Нет доступных серверов для телепортации.")
+    local currentPlaceId = game.PlaceId
+    if not currentPlaceId == 7449423635 then
+        TeleportService:Teleport(7449423635)
+    else 
+        TeleportService:Teleport(2753915549)
     end
 end
 
+-- Основной цикл
 while true do
     wait(1)
     for i, fruitName in pairs(fruitsInWorkspace) do
