@@ -167,6 +167,7 @@ while true do
     for i, fruitName in pairs(fruitsInWorkspace) do
         local fruit = game.Workspace:FindFirstChild(fruitName)
         if fruit then
+            wait(5)
             moveToFruit(fruit)
             storePlayerFruits()
             storePlayerFruits()
