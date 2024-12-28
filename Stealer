@@ -13,7 +13,7 @@ local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 
 local fruitsInWorkspace = {
-    "Rocket Fruit",
+--[[    "Rocket Fruit",
     "Spin Fruit",
     "Chop Fruit",
     "Spring Fruit",
@@ -30,7 +30,7 @@ local fruitsInWorkspace = {
     "Rubber Fruit",
     "Barrier Fruit",
     "Ghost Fruit",
-    "Magma Fruit",
+    "Magma Fruit",]]
     "Quake Fruit",
     "Buddha Fruit",
     "Love Fruit",
@@ -58,7 +58,7 @@ local fruitsInWorkspace = {
 
 -- Список фруктов для события StoreFruit
 local fruitsForEvent = {
-    "Rocket-Rocket",
+--[[    "Rocket-Rocket",
     "Spin-Spin",
     "Chop-Chop",
     "Spring-Spring",
@@ -75,7 +75,7 @@ local fruitsForEvent = {
     "Rubber-Rubber",
     "Barrier-Barrier",
     "Ghost-Ghost",
-    "Magma-Magma",
+    "Magma-Magma",]]
     "Quake-Quake",
     "Buddha-Buddha",
     "Love-Love",
