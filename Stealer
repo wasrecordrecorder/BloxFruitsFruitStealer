@@ -1,6 +1,6 @@
 repeat wait() until game:IsLoaded()
 print("Babaika Zagrushena")
-wait(16)
+wait(13)
 local Event = game:GetService("ReplicatedStorage").Remotes["CommF_"]
 
 local function setTeamToPirates()
@@ -8,12 +8,11 @@ local function setTeamToPirates()
 end
 
 setTeamToPirates()
-
+wait(5)
 local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 
 local fruitsInWorkspace = {
-    "Fruit",
     "Buddha Fruit",
     "Love Fruit",
     "Spider Fruit",
@@ -36,6 +35,50 @@ local fruitsInWorkspace = {
     "Yeti Fruit",
     "Kitsune Fruit",
     "Dragon Fruit"
+}
+
+local fruitsForEvent = {
+    "Rocket-Rocket",
+    "Spin-Spin",
+    "Chop-Chop",
+    "Spring-Spring",
+    "Bomb-Bomb",
+    "Smoke-Smoke",
+    "Spike-Spike",
+    "Flame-Flame",
+    "Falcon-Falcon",
+    "Ice-Ice",
+    "Sand-Sand",
+    "Dark-Dark",
+    "Diamond-Diamond",
+    "Light-Light",
+    "Rubber-Rubber",
+    "Barrier-Barrier",
+    "Ghost-Ghost",
+    "Magma-Magma",
+    "Quake-Quake",
+    "Buddha-Buddha",
+    "Love-Love",
+    "Spider-Spider",
+    "Sound-Sound",
+    "Phoenix-Phoenix",
+    "Portal-Portal",
+    "Rumble-Rumble",
+    "Pain-Pain",
+    "Blizzard-Blizzard",
+    "Gravity-Gravity",
+    "Mammoth-Mammoth",
+    "T-Rex-T-Rex",
+    "Dough-Dough",
+    "Shadow-Shadow",
+    "Venom-Venom",
+    "Control-Control",
+    "Spirit-Spirit",
+    "Gas-Gas",
+    "Leopard-Leopard",
+    "Yeti-Yeti",
+    "Kitsune-Kitsune",
+    "Dragon-Dragon"
 }
 
 local function collectFruits()
@@ -87,22 +130,25 @@ local function checkIfFruitExist()
 end
 
 local function storePlayerFruits()
-    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","Buy")
+	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","Buy")
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     local backpack = player.Backpack
-    for _, fruitName in ipairs(fruitsInWorkspace) do
+
+    for i, fruitName in pairs(fruitsInWorkspace) do
         local fruitInBackpack = backpack:FindFirstChild(fruitName)
         local fruitInCharacter = character:FindFirstChild(fruitName)
+
         if fruitInBackpack then
-            Event:InvokeServer("StoreFruit", fruitName, fruitInBackpack)
+            Event:InvokeServer("StoreFruit", fruitsForEvent[i], fruitInBackpack)
         elseif fruitInCharacter then
-            Event:InvokeServer("StoreFruit", fruitName, fruitInCharacter)
+            Event:InvokeServer("StoreFruit", fruitsForEvent[i], fruitInCharacter)
         end
     end
 end
 
 local function moveToFruit(fruit)
+    repeat wait() until game.Players.LocalPlayer
     local targetPart = nil
     for _, part in ipairs(fruit:GetDescendants()) do
         if part:IsA("Part") then
