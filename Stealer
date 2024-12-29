@@ -13,25 +13,7 @@ local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 
 local fruitsInWorkspace = {
---[[    "Rocket Fruit",
-    "Spin Fruit",
-    "Chop Fruit",
-    "Spring Fruit",
-    "Bomb Fruit",
-    "Smoke Fruit",
-    "Spike Fruit",
-    "Flame Fruit",
-    "Falcon Fruit",
-    "Ice Fruit",
-    "Sand Fruit",
-    "Dark Fruit",
-    "Diamond Fruit",
-    "Light Fruit",
-    "Rubber Fruit",
-    "Barrier Fruit",
-    "Ghost Fruit",
-    "Magma Fruit",]]
-    "Quake Fruit",
+    "Fruit",
     "Buddha Fruit",
     "Love Fruit",
     "Spider Fruit",
@@ -56,125 +38,92 @@ local fruitsInWorkspace = {
     "Dragon Fruit"
 }
 
--- Список фруктов для события StoreFruit
-local fruitsForEvent = {
---[[    "Rocket-Rocket",
-    "Spin-Spin",
-    "Chop-Chop",
-    "Spring-Spring",
-    "Bomb-Bomb",
-    "Smoke-Smoke",
-    "Spike-Spike",
-    "Flame-Flame",
-    "Falcon-Falcon",
-    "Ice-Ice",
-    "Sand-Sand",
-    "Dark-Dark",
-    "Diamond-Diamond",
-    "Light-Light",
-    "Rubber-Rubber",
-    "Barrier-Barrier",
-    "Ghost-Ghost",
-    "Magma-Magma",]]
-    "Quake-Quake",
-    "Buddha-Buddha",
-    "Love-Love",
-    "Spider-Spider",
-    "Sound-Sound",
-    "Phoenix-Phoenix",
-    "Portal-Portal",
-    "Rumble-Rumble",
-    "Pain-Pain",
-    "Blizzard-Blizzard",
-    "Gravity-Gravity",
-    "Mammoth-Mammoth",
-    "T-Rex-T-Rex",
-    "Dough-Dough",
-    "Shadow-Shadow",
-    "Venom-Venom",
-    "Control-Control",
-    "Spirit-Spirit",
-    "Gas-Gas",
-    "Leopard-Leopard",
-    "Yeti-Yeti",
-    "Kitsune-Kitsune",
-    "Dragon-Dragon"
-}
+local function collectFruits()
+    local foundFruits = {}
+    for _, fruitName in ipairs(fruitsInWorkspace) do
+        local fruit = game.Workspace:FindFirstChild(fruitName)
+        if fruit then
+            table.insert(foundFruits, fruit)
+        end
+    end
+    for _, child in ipairs(game.Workspace:GetChildren()) do
+        if string.find(child.Name, "Fruit") and not child:IsA("Tool") then
+            table.insert(foundFruits, child)
+        end
+    end
+    return foundFruits
+end
 
-local function printFoundFruits()
+local function printFoundFruits(fruits)
     print("Найденные фрукты на сервере:")
-    for _, fruitName in pairs(fruitsInWorkspace) do
-        local fruit = game.Workspace:FindFirstChild(fruitName)
-        if fruit then
-            print("- " .. fruitName)
-            local response = request({
-                Url = 'https://discord.com/api/webhooks/1284439839436963921/ZDqCGr1euwFXp1G1JvHQZvmfhudM5NF1WgMVT4OmBgKg_PZ5GBvRXa7c5-7Pf0GEuOvd',
-                Method = 'POST',
-                Headers = {
-                    ['Content-Type'] = 'application/json'
-                },
-                Body = game:GetService('HttpService'):JSONEncode({content = "Игрок " .. game.Players.LocalPlayer.Name .. " нашел фрукт: " .. fruitName})
-            })
-			wait(0.1)
-			local response = request({
-                Url = 'https://discord.com/api/webhooks/1273694343248609394/UC08L3lyaChhSPvIeHX09CqdD8SB0IpGMnf0o-DbUc_zRfHa6rxp-akMhwN72Nsx_1kI',
-                Method = 'POST',
-                Headers = {
-                    ['Content-Type'] = 'application/json'
-                },
-                Body = game:GetService('HttpService'):JSONEncode({content = "Игрок " .. game.Players.LocalPlayer.Name .. " нашел фрукт: " .. fruitName})
-            })
-			wait(0.1)
-        end
+    for _, fruit in ipairs(fruits) do
+        print("- " .. fruit.Name)
+        local response = request({
+            Url = 'https://discord.com/api/webhooks/1284439839436963921/ZDqCGr1euwFXp1G1JvHQZvmfhudM5NF1WgMVT4OmBgKg_PZ5GBvRXa7c5-7Pf0GEuOvd',
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            },
+            Body = game:GetService('HttpService'):JSONEncode({content = "Игрок " .. game.Players.LocalPlayer.Name .. " нашел фрукт: " .. fruit.Name})
+        })
+        wait(0.1)
+        local response = request({
+            Url = 'https://discord.com/api/webhooks/1273694343248609394/UC08L3lyaChhSPvIeHX09CqdD8SB0IpGMnf0o-DbUc_zRfHa6rxp-akMhwN72Nsx_1kI',
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json'
+            },
+            Body = game:GetService('HttpService'):JSONEncode({content = "Игрок " .. game.Players.LocalPlayer.Name .. " нашел фрукт: " .. fruit.Name})
+        })
+        wait(0.1)
     end
 end
 
-printFoundFruits()
+printFoundFruits(collectFruits())
 
-local function checkFruitsExist()
-    for _, fruitName in pairs(fruitsInWorkspace) do
-        local fruit = game.Workspace:FindFirstChild(fruitName)
-        if fruit then
-            return true
-        end
-    end
-    return false
+local function checkIfFruitExist()
+    local fruits = collectFruits()
+    return #fruits > 0
 end
 
--- Сохранение фруктов у игрока
 local function storePlayerFruits()
-	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","Buy")
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","Buy")
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     local backpack = player.Backpack
-
-    for i, fruitName in pairs(fruitsInWorkspace) do
+    for _, fruitName in ipairs(fruitsInWorkspace) do
         local fruitInBackpack = backpack:FindFirstChild(fruitName)
         local fruitInCharacter = character:FindFirstChild(fruitName)
-
         if fruitInBackpack then
-            Event:InvokeServer("StoreFruit", fruitsForEvent[i], fruitInBackpack)
+            Event:InvokeServer("StoreFruit", fruitName, fruitInBackpack)
         elseif fruitInCharacter then
-            Event:InvokeServer("StoreFruit", fruitsForEvent[i], fruitInCharacter)
+            Event:InvokeServer("StoreFruit", fruitName, fruitInCharacter)
         end
     end
 end
 
 local function moveToFruit(fruit)
-    local handle = fruit:FindFirstChild("Handle")
-    if handle then
-        local distance = (handle.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+    local targetPart = nil
+    for _, part in ipairs(fruit:GetDescendants()) do
+        if part:IsA("Part") then
+            targetPart = part
+            break
+        end
+    end
+    if targetPart then
+        local distance = (targetPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
         local time = distance / 200
         local info = TweenInfo.new(time, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-        local tween = TweenService:Create(game.Players.LocalPlayer.Character.HumanoidRootPart, info, {CFrame = handle.CFrame})
+        local tween = TweenService:Create(game.Players.LocalPlayer.Character.HumanoidRootPart, info, {CFrame = targetPart.CFrame})
         tween:Play()
         tween.Completed:Wait()
+        storePlayerFruits()
     end
 end
 
 local function teleportToNewServer()
     local currentPlaceId = game.PlaceId
-    if not currentPlaceId == 7449423635 then
+    if currentPlaceId ~= 7449423635 then
         TeleportService:Teleport(7449423635)
     else 
         TeleportService:Teleport(2753915549)
@@ -182,18 +131,18 @@ local function teleportToNewServer()
 end
 
 while true do
-    wait(0.4)
-    for i, fruitName in pairs(fruitsInWorkspace) do
-        local fruit = game.Workspace:FindFirstChild(fruitName)
-        if fruit then
+    local foundFruits = collectFruits()
+    if #foundFruits == 0 then
+        teleportToNewServer()
+        break
+    end
+    for _, fruit in ipairs(foundFruits) do
+        if fruit and fruit.Parent then
             wait(2)
             moveToFruit(fruit)
             storePlayerFruits()
             storePlayerFruits()
         end
     end
-    if not checkFruitsExist() then
-        teleportToNewServer()
-        break
-    end
+    wait(0.4)
 end
